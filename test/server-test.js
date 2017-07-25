@@ -1,5 +1,7 @@
 'use strict';
 
+require('./lib/test-env.js');
+
 const expect = require('chai').expect;
 const mongoose = require('mongoose');
 const server = require('../server.js');
@@ -17,6 +19,14 @@ describe('Server Test', function() {
 
   it('should return SERVER UP', done => {
     expect(server.isRunning).to.equal(true);
+    done();
+  });
+});
+
+describe('Database Test', function() {
+  it('should return a connection', done => {
+    expect(mongoose.connection.port).to.be.a('number');
+    expect(mongoose.connection.name).to.equal('we-build-trails-devdb');
     done();
   });
 });

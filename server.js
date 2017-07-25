@@ -12,7 +12,7 @@ dotenv.load();
 const PORT = process.env.PORT;
 const app = express();
 
-// mongoose.connect(process.env.MONGODB_URI);
+mongoose.connect(process.env.MONGODB_URI);
 
 app.use(cors());
 app.use(morgan('dev'));
