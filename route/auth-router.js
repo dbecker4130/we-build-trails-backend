@@ -14,7 +14,7 @@ const authRouter = module.exports = Router();
 authRouter.post('/api/signup', jsonParser, function(req, res, next) {
   debug('POST: /api/signup');
 
-  if (!req.body.username || !req.body.email ) {
+  if (!req.body.username || !req.body.email || !req.body.password) {
     res.status(400).send();
     return;
   }

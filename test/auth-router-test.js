@@ -31,17 +31,56 @@ describe('Auth Routes', function() {
   afterEach(done => clearDB(done));
 
   describe('POST: /api/signup', function() {
-    describe('with a valid body', function() {
+    describe('with VALID body', function() {
       it('should return a token', done => {
         request.post(`${url}/api/signup`)
         .send(exampleUser)
         .end((err, res) => {
           if (err) return done(err);
           expect(res.status).to.equal(200);
+          expect(res.text).to.be.a('string');
           done();
         });
       });
     });
+
+    describe('with BAD request', () => {
+      it('should return a 400 error', done => {
+        request.post(`${url}/api/signup`)
+        .send({ username: 'invalid user' })
+        .end((err, res) => {
+          expect(err).to.be.an('error');
+          expect(res.status).to.equal(400);
+          done();
+        });
+      });
+    });
+
+    describe('with NO body', () => {
+      it('should return a 400 error', done => {
+        request.post(`${url}/api/signup`)
+        .send({})
+        .end((err, res) => {
+          expect(err).to.be.an('error');
+          expect(res.status).to.equal(400);
+          done();
+        });
+      });
+    });
+
+    describe('with an NOT FOUND route', () => {
+      it('should return a 404 not found', done => {
+        request.post(`${url}/api/bad-route`)
+        .send(exampleUser)
+        .end((err, res) => {
+          expect(err).to.be.an('error');
+          expect(res.status).to.equal(404);
+          done();
+        });
+      });
+    });
+
+
 
 
 
