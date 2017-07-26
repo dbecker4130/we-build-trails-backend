@@ -60,6 +60,37 @@ describe('Post Routes', function() {
         .end((err, res) => {
           if (err) return done(err);
           expect(res.status).to.equal(200);
+          expect(res.body.title).to.equal('post title');
+          done();
+        });
+      });
+    });
+
+    describe('with an INVALID body', () => {
+      it('should return a 400 bad request', done => {
+        request.post(`${url}/api/post`)
+        .send({})
+        .set({
+          Authorization: `Bearer ${this.tempToken}`
+        })
+        .end((err, res) => {
+          expect(err).to.be.an('error');
+          expect(res.status).to.equal(400);
+          done();
+        });
+      });
+    });
+
+    describe('with NO TOKEN found', () => {
+      it('should return 401 unauthorized', done => {
+        request.post(`${url}/api/post`)
+        .send(examplePost)
+        .set({
+          Authorization: `Bearer${this.tempToken}`
+        })
+        .end((err, res) => {
+          expect(err).to.be.an('error');
+          expect(res.status).to.equal(401);
           done();
         });
       });
