@@ -10,7 +10,7 @@ exports.exampleUser = {
 
 exports.examplePost = {
   title: 'post title',
-  username: 'example name'
+  // username: 'example name'
 };
 
 exports.exampleComment = {
