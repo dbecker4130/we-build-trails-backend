@@ -79,13 +79,61 @@ describe('Auth Routes', function() {
         });
       });
     });
+  });
 
+  describe('GET: /api/signin', () => {
+    before(done => {
+      let user = new User(exampleUser);
+      user.generatePasswordHash(exampleUser.password)
+      .then(user => user.save())
+      .then(user => {
+        this.tempUser = user;
+        done();
+      })
+      .catch(done);
+    });
 
+    describe('with an AUTHENTICATED user', () => {
+      it('should return a token', done => {
+        request.get(`${url}/api/signin`)
+        .auth('example name', '1234')
+        .end((err, res) => {
+          if (err) return done(err);
+          expect(res.status).to.equal(200);
+          expect(res.text).to.be.a('string');
+          done();
+        });
+      });
+    });
 
+    // describe('with an INVALID username', () => {
+    //   it('should return 401 unauthorized', done => {
+    //     request.get(`${url}/api/signin`)
+    //     .auth('examp name', '1234')
+    //     .end((err, res) => {
+    //       expect(err).to.be.an('error');
+    //       expect(res.status).to.equal(401);
+    //       done();
+    //     });
+    //   });
+    // });
+    //
+    // describe('with an INVALID password', () => {
+    //   it('should return a 401 unauthorized', done => {
+    //     request.get(`${url}/api/signin`)
+    //     .auth('example name', '987564')
+    //     .end((err, res) => {
+    //       expect(err).to.be.an('error');
+    //       expect(res.status).to.equal(401);
+    //       done();
+    //     });
+    //   });
+    // });
 
 
 
   });
+
 
 
 });
