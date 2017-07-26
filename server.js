@@ -7,6 +7,9 @@ const morgan = require('morgan');
 const mongoose = require('mongoose');
 const debug = require('debug')('we-build-trails-backend:server.js');
 
+const authRouter = require('./route/auth-router.js');
+const errors = require('./lib/err-middleware.js');
+
 dotenv.load();
 
 const PORT = process.env.PORT;
@@ -18,6 +21,8 @@ app.use(cors());
 app.use(morgan('dev'));
 
 app.use(express.static(`${__dirname}/build}`));
+app.use(errors);
+app.use(authRouter);
 
 const server = module.exports = app.listen(PORT, () => {
   debug(`server live: ${PORT}`);

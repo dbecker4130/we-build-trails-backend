@@ -5,7 +5,7 @@ module.exports = exports = {};
 exports.exampleUser = {
   username: 'example name',
   email: 'example@test.com',
-  password: '123456'
+  password: '1234'
 };
 
 exports.examplePost = {

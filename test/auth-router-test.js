@@ -38,7 +38,6 @@ describe('Auth Routes', function() {
         .end((err, res) => {
           if (err) return done(err);
           expect(res.status).to.equal(200);
-          expect(res.text).to.be.a('string');
           done();
         });
       });
