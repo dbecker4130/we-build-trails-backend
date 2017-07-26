@@ -2,7 +2,7 @@
 
 const Router = require('express').Router;
 const jsonParser = require('body-parser').json();
-// const createError = require('http-errors');
+const createError = require('http-errors');
 const debug = require('debug')('we-build-trails-backend:post-router');
 
 const Post = require('../model/post.js');
@@ -21,5 +21,20 @@ postRouter.post('/api/post', bearerAuth, jsonParser, function(req, res, next) {
   req.body.userID = req.user._id;
   new Post(req.body).save()
   .then( post => res.json(post))
+  .catch(next);
+});
+
+postRouter.get('/api/post', bearerAuth, jsonParser, function(req, res, next) {
+  debug('GET: /api/post');
+
+  Post.find({})
+  .populate('images')
+  .populate('userID')
+  .populate('comments')
+  .then( post => {
+    console.log(post);
+    if (post === null) return next(createError(404, 'no posts found'));
+    res.json(post);
+  })
   .catch(next);
 });

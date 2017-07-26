@@ -97,4 +97,20 @@ describe('Post Routes', function() {
     });
   });
 
+  describe('GET: /api/post', () => {
+    describe('with a VALID body', () => {
+      it('should return all posts', done => {
+        request.get(`${url}/api/post`)
+        .set({
+          Authorization: `Bearer ${this.tempToken}`
+        })
+        .end((err, res) => {
+          if (err) return done(err);
+          expect(res.status).to.equal(200);
+          done();
+        });
+      });
+    });
+  });
+
 });
