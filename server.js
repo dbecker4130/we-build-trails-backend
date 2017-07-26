@@ -8,6 +8,7 @@ const mongoose = require('mongoose');
 const debug = require('debug')('we-build-trails-backend:server.js');
 
 const authRouter = require('./route/auth-router.js');
+const postRouter = require('./route/post-router.js');
 const errors = require('./lib/err-middleware.js');
 
 dotenv.load();
@@ -23,6 +24,7 @@ app.use(morgan('dev'));
 app.use(express.static(`${__dirname}/build}`));
 app.use(errors);
 app.use(authRouter);
+app.use(postRouter);
 
 const server = module.exports = app.listen(PORT, () => {
   debug(`server live: ${PORT}`);
