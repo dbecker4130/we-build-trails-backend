@@ -40,3 +40,39 @@ postRouter.get('/api/post', bearerAuth, function(req, res, next) {
   })
   .catch(next);
 });
+
+postRouter.get('/api/:userID/post', bearerAuth, function(req, res, next) {
+  debug('GET: /api/:userID/post');
+
+  Post.find({ userID: req.params.userID })
+  .populate('images')
+  .then( post => {
+    res.json(post);
+  })
+  .catch(err => next(createError(404, err.message)));
+});
+
+postRouter.put('/api/post/:postID', bearerAuth, jsonParser, function(req, res, next) {
+  debug('GET: /api/post/:postID');
+
+  if (!req.body.title) return next(createError(400, 'body required'));
+
+  Post.findByIdAndUpdate(req.params.postID, req.body, { new: true })
+  .populate('images')
+  .then( post => {
+    if (post === null) return next(createError(404, 'post not found'));
+    res.json(post);
+  })
+  .catch(err => next(createError(404, err.message)));
+});
+
+postRouter.delete('/api/post/:id', bearerAuth, function(req, res, next) {
+  debug('DELETE: /api/post/:id');
+
+  Post.findByIdAndRemove(req.params.id)
+  .then( post => {
+    if (post === null) return next(createError(404, 'id not found'));
+    res.status(204).send();
+  })
+  .catch(err => next(createError(404, err.message)));
+});

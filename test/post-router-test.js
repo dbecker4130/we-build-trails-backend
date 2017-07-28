@@ -113,6 +113,134 @@ describe('Post Routes', function() {
         });
       });
     });
+
+    describe('with an INVALID path', () => {
+      it('should return 404 not found', done => {
+        request.get(`${url}/api/notpost`)
+        .set({
+          Authorization: `Bearer ${this.tempToken}`
+        })
+        .end((err, res) => {
+          expect(err).to.be.an('error');
+          expect(res.status).to.equal(404);
+          done();
+        });
+      });
+    });
+
+    describe('with an INVALID token', () => {
+      it('should return 401 unauthorized', done => {
+        request.get(`${url}/api/post`)
+        .set({
+          Authorization: `Bearer${this.tempToken}`
+        })
+        .end((err, res) => {
+          expect(err).to.be.an('error');
+          expect(res.status).to.equal(401);
+          done();
+        });
+      });
+    });
   });
+
+  describe('GET: /api/:userID/post', () => {
+    describe('with a VALID body', () => {
+      it('should return this users posts', done => {
+        request.get(`${url}/api/${this.tempUser._id}/post`)
+        .set({
+          Authorization: `Bearer ${this.tempToken}`
+        })
+        .end((err, res) => {
+          if (err) return done(err);
+          expect(res.status).to.equal(200);
+          done();
+        });
+      });
+    });
+
+    describe('with an INVALID userID', () => {
+      it('should return a 404 not found', done => {
+        request.get(`${url}/api/userID/post`)
+        .set({
+          Authorization: `Bearer ${this.tempToken}`
+        })
+        .end((err, res) => {
+          expect(err).to.be.an('error');
+          expect(res.status).to.equal(404);
+          done();
+        });
+      });
+    });
+  });
+
+  describe('PUT: /api/post/:postID', () => {
+    describe('with a valid body', () => {
+      it('should return an updated post', done => {
+        let updated = { title: 'new name' };
+
+        request.put(`${url}/api/post/${this.tempPost._id}`)
+        .send(updated)
+        .set({
+          Authorization: `Bearer ${this.tempToken}`
+        })
+        .end((err, res) => {
+          if (err) return done(err);
+          expect(res.status).to.equal(200);
+          expect(res.body.title).to.equal('new name');
+          done();
+        });
+      });
+    });
+
+    describe('with an INVALID postID', () => {
+      it('should return 404 not found', done => {
+        let updated = { title: 'new name' };
+
+        request.put(`${url}/api/post/postID`)
+        .send(updated)
+        .set({
+          Authorization: `Bearer ${this.tempToken}`
+        })
+        .end((err, res) => {
+          expect(err).to.be.an('error');
+          expect(res.status).to.equal(404);
+          done();
+        });
+      });
+    });
+  });
+
+  describe('DELETE: /api/post/:postID', () => {
+    describe('with a VALID body', () => {
+      it('should delete a post', done => {
+        request.delete(`${url}/api/post/${this.tempPost._id}`)
+        .set({
+          Authorization: `Bearer ${this.tempToken}`
+        })
+        .end((err, res) => {
+          if (err) return done(err);
+          expect(res.status).to.equal(204);
+          expect(res.body).to.be.empty;
+          done();
+        });
+      });
+    });
+
+    describe('with an INVALID postID', () => {
+      it('should return 404 not found', done => {
+        request.delete(`${url}/api/post/postID`)
+        .set({
+          Authorization: `Bearer ${this.tempToken}`
+        })
+        .end((err, res) => {
+          expect(err).to.be.an('error');
+          expect(res.status).to.equal(404);
+          done();
+        });
+      });
+    });
+  });
+
+
 
 });
