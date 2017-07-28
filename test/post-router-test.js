@@ -113,6 +113,36 @@ describe('Post Routes', function() {
         });
       });
     });
+
+    describe('with an INVALID path', () => {
+      it('should return 404 not found', done => {
+        request.get(`${url}/api/notpost`)
+        .set({
+          Authorization: `Bearer ${this.tempToken}`
+        })
+        .end((err, res) => {
+          expect(err).to.be.an('error');
+          expect(res.status).to.equal(404);
+          done();
+        });
+      });
+    });
+
+    describe('with an INVALID token', () => {
+      it('should return 401 unauthorized', done => {
+        request.get(`${url}/api/post`)
+        .set({
+          Authorization: `Bearer${this.tempToken}`
+        })
+        .end((err, res) => {
+          expect(err).to.be.an('error');
+          expect(res.status).to.equal(401);
+          done();
+        });
+      });
+    });
+
+
   });
 
 });
