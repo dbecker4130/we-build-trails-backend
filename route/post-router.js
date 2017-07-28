@@ -51,3 +51,17 @@ postRouter.get('/api/:userID/post', bearerAuth, function(req, res, next) {
   })
   .catch(err => next(createError(404, err.message)));
 });
+
+postRouter.put('/api/post/:postID', bearerAuth, jsonParser, function(req, res, next) {
+  debug('GET: /api/post/:postID');
+
+  if (!req.body.title) return next(createError(400, 'body required'));
+
+  Post.findByIdAndUpdate(req.params.postID, req.body, { new: true })
+  .populate('images')
+  .then( post => {
+    if (post === null) return next(createError(404, 'post not found'));
+    res.json(post);
+  })
+  .catch(err => next(createError(404, err.message)));
+});

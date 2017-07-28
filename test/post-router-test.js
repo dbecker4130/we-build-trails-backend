@@ -157,6 +157,20 @@ describe('Post Routes', function() {
         });
       });
     });
+
+    describe('with an INVALID userID', () => {
+      it('should return a 404 not found', done => {
+        request.get(`${url}/api/userID/post`)
+        .set({
+          Authorization: `Bearer ${this.tempToken}`
+        })
+        .end((err, res) => {
+          expect(err).to.be.an('error');
+          expect(res.status).to.equal(404);
+          done();
+        });
+      });
+    });
   });
 
 
