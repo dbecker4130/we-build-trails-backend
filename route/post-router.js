@@ -40,3 +40,14 @@ postRouter.get('/api/post', bearerAuth, function(req, res, next) {
   })
   .catch(next);
 });
+
+postRouter.get('/api/:userID/post', bearerAuth, function(req, res, next) {
+  debug('GET: /api/:userID/post');
+
+  Post.find({userID: req.params.userID})
+  .populate('images')
+  .then( post => {
+    res.json(post);
+  })
+  .catch(err => next(createError(404, err.message)));
+});
