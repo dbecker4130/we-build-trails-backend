@@ -173,6 +173,43 @@ describe('Post Routes', function() {
     });
   });
 
+  describe('PUT: /api/post/:postID', () => {
+    describe('with a valid body', () => {
+      it('should return an updated post', done => {
+        let updated = { title: 'new name' };
+
+        request.put(`${url}/api/post/${this.tempPost._id}`)
+        .send(updated)
+        .set({
+          Authorization: `Bearer ${this.tempToken}`
+        })
+        .end((err, res) => {
+          if (err) return done(err);
+          expect(res.status).to.equal(200);
+          expect(res.body.title).to.equal('new name');
+          done();
+        });
+      });
+    });
+
+    describe('with an INVALID postID', () => {
+      it('should return 404 not found', done => {
+        let updated = { title: 'new name' };
+
+        request.put(`${url}/api/post/postID`)
+        .send(updated)
+        .set({
+          Authorization: `Bearer ${this.tempToken}`
+        })
+        .end((err, res) => {
+          expect(err).to.be.an('error');
+          expect(res.status).to.equal(404);
+          done();
+        });
+      });
+    });
+  });
+
 
 
 });
