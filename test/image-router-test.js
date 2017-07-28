@@ -10,6 +10,7 @@ const User = require('../model/user.js');
 const Post = require('../model/post.js');
 
 const serverToggle = require('./lib/toggle-server.js');
+const testData = require('./lib/test-data.js');
 const clearDB = require('./lib/clearDB.js');
 const server = require('../server.js');
 
@@ -43,24 +44,38 @@ describe('Image Routes', function() {
     })
     .then( post => {
       this.tempPost = post;
-      exampleImage.postID = this.tempPost._id.toString();
-      return new Image(exampleImage).save();
-    })
-    .then( image => {
-      this.tempImage = image;
+      // this.tempPost._id.toString();
       done();
     })
     .catch(done);
   });
-  afterEach( () => {
+  afterEach( done => {
     delete examplePost.userID;
-    delete exampleImage.postID;
+    done();
   });
   afterEach(done => clearDB(done));
 
+  describe('POST: /api/post/:postID/image', () => {
+    describe('with a VALID body', () => {
+      it('should post an image to postID', done => {
+        request.post(`${url}/api/post/${this.tempPost._id}/image`)
+        .set({
+          Authorization: `Bearer ${this.tempToken}`
+        })
+        .attach('image', exampleImage.image)
+        .end((err, res) => {
+          if (err) return done(err);
+          expect(res.body.postID).to.equal(this.tempPost._id.toString());
+          imageData = res.body;
+          done();
+        });
+      });
+    });
+  });
 
 
 
 
-  
+
+
 });

@@ -3,14 +3,14 @@
 const fs = require('fs');
 const path = require('path');
 const del = require('del');
-const AWS = require('ask-sdk');
+const AWS = require('aws-sdk');
 const multer = require('multer');
 const createError = require('http-errors');
 const bearerAuth = require('../lib/bearer-auth-middleware.js');
 const debug = require('debug')('we-build-trails-backend:image-router');
 
 const Router = require('express').Router;
-const Image = require('../model/imgae.js');
+const Image = require('../model/image.js');
 const Post = require('../model/post.js');
 
 AWS.config.setPromisesDependency(require('bluebird'));
