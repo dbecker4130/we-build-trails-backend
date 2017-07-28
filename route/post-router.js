@@ -44,7 +44,7 @@ postRouter.get('/api/post', bearerAuth, function(req, res, next) {
 postRouter.get('/api/:userID/post', bearerAuth, function(req, res, next) {
   debug('GET: /api/:userID/post');
 
-  Post.find({userID: req.params.userID})
+  Post.find({ userID: req.params.userID })
   .populate('images')
   .then( post => {
     res.json(post);

@@ -141,8 +141,24 @@ describe('Post Routes', function() {
         });
       });
     });
-
-
   });
+
+  describe('GET: /api/:userID/post', () => {
+    describe('with a VALID body', () => {
+      it('should return this users posts', done => {
+        request.get(`${url}/api/${this.tempUser._id}/post`)
+        .set({
+          Authorization: `Bearer ${this.tempToken}`
+        })
+        .end((err, res) => {
+          if (err) return done(err);
+          expect(res.status).to.equal(200);
+          done();
+        });
+      });
+    });
+  });
+
+
 
 });
