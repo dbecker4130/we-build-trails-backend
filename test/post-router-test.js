@@ -210,6 +210,37 @@ describe('Post Routes', function() {
     });
   });
 
+  describe('DELETE: /api/post/:postID', () => {
+    describe('with a VALID body', () => {
+      it('should delete a post', done => {
+        request.delete(`${url}/api/post/${this.tempPost._id}`)
+        .set({
+          Authorization: `Bearer ${this.tempToken}`
+        })
+        .end((err, res) => {
+          if (err) return done(err);
+          expect(res.status).to.equal(204);
+          expect(res.body).to.be.empty;
+          done();
+        });
+      });
+    });
+
+    describe('with an INVALID postID', () => {
+      it('should return 404 not found', done => {
+        request.delete(`${url}/api/post/postID`)
+        .set({
+          Authorization: `Bearer ${this.tempToken}`
+        })
+        .end((err, res) => {
+          expect(err).to.be.an('error');
+          expect(res.status).to.equal(404);
+          done();
+        });
+      });
+    });
+  });
+
 
 
 });

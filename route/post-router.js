@@ -65,3 +65,14 @@ postRouter.put('/api/post/:postID', bearerAuth, jsonParser, function(req, res, n
   })
   .catch(err => next(createError(404, err.message)));
 });
+
+postRouter.delete('/api/post/:id', bearerAuth, function(req, res, next) {
+  debug('DELETE: /api/post/:id');
+
+  Post.findByIdAndRemove(req.params.id)
+  .then( post => {
+    if (post === null) return next(createError(404, 'id not found'));
+    res.status(204).send();
+  })
+  .catch(err => next(createError(404, err.message)));
+});
