@@ -18,5 +18,5 @@ exports.exampleComment = {
 };
 
 exports.exampleImage = {
-  image: `${__dirname}/test/data/seattle-mets.png`
+  image: `${__dirname}/../data/tester.png`
 };
