@@ -44,7 +44,6 @@ describe('Image Routes', function() {
     })
     .then( post => {
       this.tempPost = post;
-      // this.tempPost._id.toString();
       done();
     })
     .catch(done);
@@ -65,6 +64,7 @@ describe('Image Routes', function() {
         .attach('image', exampleImage.image)
         .end((err, res) => {
           if (err) return done(err);
+          expect(res.status).to.equal(200);
           expect(res.body.postID).to.equal(this.tempPost._id.toString());
           imageData = res.body;
           done();
@@ -72,10 +72,5 @@ describe('Image Routes', function() {
       });
     });
   });
-
-
-
-
-
 
 });

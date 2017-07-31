@@ -50,7 +50,7 @@ imageRouter.post('/api/post/:postID/image', bearerAuth, upload.single('image'), 
     Body: fs.createReadStream(req.file.path)
   };
 
-  let tempPost;
+  let tempPost = null;
   let tempImage;
 
   Post.findById(req.params.postID)
@@ -64,6 +64,7 @@ imageRouter.post('/api/post/:postID/image', bearerAuth, upload.single('image'), 
       imageURI: s3data.Location,
       objectKey: s3data.Key,
       postID: req.params.postID,
+      userID: req.user._id
     };
     return new Image(imageData).save();
   })
