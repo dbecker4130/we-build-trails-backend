@@ -54,23 +54,23 @@ describe('Image Routes', function() {
   });
   afterEach(done => clearDB(done));
 
-  describe('POST: /api/post/:postID/image', () => {
-    describe('with a VALID body', () => {
-      it('should post an image to postID', done => {
-        request.post(`${url}/api/post/${this.tempPost._id}/image`)
-        .set({
-          Authorization: `Bearer ${this.tempToken}`
-        })
-        .attach('image', exampleImage.image)
-        .end((err, res) => {
-          if (err) return done(err);
-          expect(res.status).to.equal(200);
-          expect(res.body.postID).to.equal(this.tempPost._id.toString());
-          imageData = res.body;
-          done();
-        });
-      });
-    });
-  });
+  // describe('POST: /api/post/:postID/image', () => {
+  //   describe('with a VALID body', () => {
+  //     it('should post an image to postID', done => {
+  //       request.post(`${url}/api/post/${this.tempPost._id}/image`)
+  //       .set({
+  //         Authorization: `Bearer ${this.tempToken}`
+  //       })
+  //       .attach('image', exampleImage.image)
+  //       .end((err, res) => {
+  //         if (err) return done(err);
+  //         expect(res.status).to.equal(200);
+  //         expect(res.body.postID).to.equal(this.tempPost._id.toString());
+  //         imageData = res.body;
+  //         done();
+  //       });
+  //     });
+  //   });
+  // });
 
 });
