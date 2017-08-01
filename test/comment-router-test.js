@@ -7,7 +7,7 @@ const request = require('superagent');
 
 const User = require('../model/user.js');
 const Comment = require('../model/comment.js');
-const Post = require('..model/post.js');
+const Post = require('../model/post.js');
 
 const serverToggle = require('./lib/toggle-server.js');
 const testData = require('./lib/test-data.js');
@@ -29,10 +29,11 @@ describe('Comment Routes', function() {
   });
   afterEach( done => clearDB(done));
   beforeEach( done => {
-    new User(exampleUSer)
+    new User(exampleUser)
     .generatePasswordHash(exampleUser.password)
     .then( user => user.save())
-    .then( .tempUser = user;
+    .then( user => {
+      this.tempUser = user;
       return user.generateToken();
     })
     .then( token => {
@@ -44,7 +45,7 @@ describe('Comment Routes', function() {
       this.tempPost = post;
       exampleComment.userID = this.tempUser._id.toString();
       exampleComment.postID = this.tempPost._id.toString();
-      return new Comment(exampleComment).save()''
+      return new Comment(exampleComment).save()
     })
     .then( comment => {
       this.tempComment = comment;
@@ -56,5 +57,20 @@ describe('Comment Routes', function() {
     delete exampleComment.userID;
   });
 
-  
-})
+  describe('POST: /api/post/:postID/comment', () => {
+    describe('with a VALID body', () => {
+      it('should create a comment', done => {
+        request.post(`${url}/api/post/${this.tempPost._id}/comment`)
+        .send(exampleComment)
+        .set({
+          Authorization: `Bearer ${this.tempToken}`
+        })
+        .end((err, res) => {
+          if (err) return done(err);
+          expect(res.status).to.equal(200);
+          done();
+        });
+      });
+    });
+  });
+});
