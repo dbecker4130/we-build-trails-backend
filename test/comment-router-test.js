@@ -122,7 +122,23 @@ describe('Comment Routes', function() {
         })
       })
     })
-  })
+    describe('with a INVALID path', () => {
+      it('should return 404 error', done => {
+        let updated = { desc: 'updated comment' };
+
+        request.put(`${url}/api/post/${this.tempPost._id}/comment/${this.badComment}`)
+        .send(updated)
+        .set({
+          Authorization: `Bearer ${this.tempToken}`
+        })
+        .end((err, res) => {
+          expect(err).to.be.an('error');
+          expect(res.status).to.equal(404);
+          done();
+        });
+      });
+    });
+  });
 
   describe('DELETE: /api/post/:postID/comment/:commentID', () => {
     describe('with a VALID body', () => {
