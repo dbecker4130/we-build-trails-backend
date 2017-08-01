@@ -54,7 +54,8 @@ describe('Comment Routes', function() {
     .catch(done);
   })
   afterEach(() => {
-    delete exampleComment.userID;
+    delete examplePost.userID;
+    delete exampleComment.postID;
   });
 
   describe('POST: /api/post/:postID/comment', () => {

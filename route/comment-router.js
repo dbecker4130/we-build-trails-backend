@@ -11,8 +11,8 @@ const bearerAuth = require('../lib/bearer-auth-middleware.js');
 
 const commentRouter = module.exports = Router();
 
-commentRouter.post('/api/post/:postID/note', bearerAuth, jsonParser, function(req, res, next) {
-  debug('POST: /api/post/:postID/note');
+commentRouter.post('/api/post/:postID/comment', bearerAuth, jsonParser, function(req, res, next) {
+  debug('POST: /api/post/:postID/comment');
 
   if (!req.body.desc) {
     res.status(400).send();
