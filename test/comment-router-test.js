@@ -69,9 +69,58 @@ describe('Comment Routes', function() {
         .end((err, res) => {
           if (err) return done(err);
           expect(res.status).to.equal(200);
+          expect(res.body.desc).to.equal('example comment');
+          expect(res.body.userID).to.equal(this.tempUser._id.toString());
+          done();
+        });
+      });
+    });
+    describe('with an INVALID path', () => {
+      it('should return 404 error', done => {
+        request.post(`${url}/api/post/${this.tempPost._id}/note}`)
+        .send(exampleComment)
+        .set({
+          Authorization: `Bearer ${this.tempToken}`
+        })
+        .end((err, res) => {
+          expect(err).to.be.an('error');
+          expect(res.status).to.equal(404);
+          done();
+        })
+      })
+    })
+    describe('with a INVALID comment', () => {
+      it('should return 400 error', done => {
+        request.post(`${url}/api/post/${this.tempPost._id}/comment`)
+        .send({})
+        .set({
+          Authorization: `Bearer ${this.tempToken}`
+        })
+        .end((err, res) => {
+          expect(err).to.be.an('error');
+          expect(res.status).to.equal(400);
           done();
         });
       });
     });
   });
+
+  describe('PUT: /api/post/:postID/comment/:commentID', () => {
+    describe('with a VALID body', () => {
+      it('should update a comment', done => {
+        let updated = { desc: 'updated comment' };
+
+        request.put(`${url}/api/post/${this.tempPost._id}/comment/${this.tempComment._id}`)
+        .send(updated)
+        .set({
+          Authorization: `Bearer ${this.tempToken}`
+        })
+        .end((err, res) => {
+          if(err) return done(err);
+          expect(res.status).to.equal(200);
+          done();
+        })
+      })
+    })
+  })
 });

@@ -26,4 +26,19 @@ commentRouter.post('/api/post/:postID/comment', bearerAuth, jsonParser, function
   new Comment(req.body).save()
   .then( comment => res.json(comment))
   .catch(next);
+
+  //NOTE Possible refactor pushing comments to post if doesn't work correctly on front end
 });
+
+commentRouter.put('/api/post/:postID/comment/:commentID', bearerAuth, jsonParser, function(req, res, next) {
+  debug('PUT: /api/post/:postID/commment/:commentID');
+
+  if (!req.body.desc) return next(createError(400, 'body required'));
+
+  Comment.findByIdAndUpdate(req.params.commentID, req.body, { new: true })
+  .then( comment => {
+    if (comment === null) return next(createError(404, 'comment not found'));
+    res.json(comment);
+  })
+  .catch(err => next(createError(404, err.message)));
+})
