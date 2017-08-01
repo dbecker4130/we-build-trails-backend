@@ -41,4 +41,21 @@ commentRouter.put('/api/post/:postID/comment/:commentID', bearerAuth, jsonParser
     res.json(comment);
   })
   .catch(err => next(createError(404, err.message)));
-})
+});
+
+commentRouter.delete('/api/post/:postID/comment/:commentID', bearerAuth, function(req, res, next) {
+  debug('DELETE: /api/post/:postID/comment/:commentID');
+
+  Post.findById(req.params.postID)
+  .then( post => {
+    post.commentIDs.remove(req.params.commentID);
+    return Comment.findByIdAndRemove(req.params.commentID);
+  })
+  .then( comment => {
+    if (comment === null) return next(createError(404, 'id not found'));
+    res.status(204).send();
+  })
+  .catch(err => {
+    next(createError(404, err.message));
+  });
+});

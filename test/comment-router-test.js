@@ -123,4 +123,21 @@ describe('Comment Routes', function() {
       })
     })
   })
+
+  describe('DELETE: /api/post/:postID/comment/:commentID', () => {
+    describe('with a VALID body', () => {
+      it('should delete a comment from a post', done => {
+        request.delete(`${url}/api/post/${this.tempPost._id}/comment/${this.tempComment._id}`)
+        .set({
+          Authorization: `Bearer ${this.tempToken}`
+        })
+        .end((err, res) => {
+          if (err) return done(err);
+          expect(res.status).to.equal(204);
+          expect(res.body).to.be.empty;
+          done();
+        });
+      });
+    });
+  });
 });
