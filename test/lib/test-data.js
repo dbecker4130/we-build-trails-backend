@@ -14,7 +14,7 @@ exports.examplePost = {
 };
 
 exports.exampleComment = {
-  desc: 'example comment'
+  desc: 'example comment',
 };
 
 exports.exampleImage = {

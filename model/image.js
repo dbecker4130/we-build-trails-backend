@@ -7,7 +7,7 @@ const imageSchema = Schema({
   imageURI: { type: String, required: true, unique: true },
   objectKey: { type: String, required: true, unique: true },
   postID: { type: Schema.Types.ObjectId, ref:'post' },
-  userID: { type: Schema.Types.ObjectId, required: true },
+  userID: { type: Schema.Types.ObjectId },
   created: { type: Date, default: Date.now }
 });
 
