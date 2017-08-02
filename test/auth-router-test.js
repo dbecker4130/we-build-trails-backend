@@ -133,7 +133,16 @@ describe('Auth Routes', function() {
       });
     });
 
-
+    describe('with an INVALID auth header', () => {
+      it('should return a 401 auth header required', done => {
+        request.get(`${url}/api/signin`)
+        .end((err, res) => {
+          expect(err).to.be.an('error');
+          expect(res.status).to.equal(401);
+          done();
+        });
+      });
+    });
 
   });
 
