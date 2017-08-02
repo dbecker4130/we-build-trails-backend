@@ -62,7 +62,6 @@ describe('Image Routes', function() {
         })
         .catch(done);
       });
-
       after( done => {
         delete examplePost.userID;
         done();
