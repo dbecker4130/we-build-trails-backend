@@ -109,31 +109,40 @@ describe('Auth Routes', function() {
       });
     });
 
-    // describe('with an INVALID username', () => {
-    //   it('should return 401 unauthorized', done => {
-    //     request.get(`${url}/api/signin`)
-    //     .auth('examp name', '1234')
-    //     .end((err, res) => {
-    //       expect(err).to.be.an('error');
-    //       expect(res.status).to.equal(401);
-    //       done();
-    //     });
-    //   });
-    // });
-    //
-    // describe('with an INVALID password', () => {
-    //   it('should return a 401 unauthorized', done => {
-    //     request.get(`${url}/api/signin`)
-    //     .auth('example name', '987564')
-    //     .end((err, res) => {
-    //       expect(err).to.be.an('error');
-    //       expect(res.status).to.equal(401);
-    //       done();
-    //     });
-    //   });
-    // });
+    describe('with an INVALID username', () => {
+      it('should return 401 unauthorized', done => {
+        request.get(`${url}/api/signin`)
+        .auth('examp name', '1234')
+        .end((err, res) => {
+          expect(err).to.be.an('error');
+          expect(res.status).to.equal(401);
+          done();
+        });
+      });
+    });
 
+    describe('with an INVALID password', () => {
+      it('should return a 401 unauthorized', done => {
+        request.get(`${url}/api/signin`)
+        .auth('example name', '987564')
+        .end((err, res) => {
+          expect(err).to.be.an('error');
+          expect(res.status).to.equal(401);
+          done();
+        });
+      });
+    });
 
+    describe('with an INVALID auth header', () => {
+      it('should return a 401 auth header required', done => {
+        request.get(`${url}/api/signin`)
+        .end((err, res) => {
+          expect(err).to.be.an('error');
+          expect(res.status).to.equal(401);
+          done();
+        });
+      });
+    });
 
   });
 
