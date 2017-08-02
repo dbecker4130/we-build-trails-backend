@@ -4,23 +4,22 @@ require('./lib/test-env.js');
 
 const expect = require('chai').expect;
 const request = require('superagent');
-
-const Image = require('../model/image.js');
+const mongoose = require('mongoose');
+const Promise = require('bluebird');
 const User = require('../model/user.js');
 const Post = require('../model/post.js');
-
-const serverToggle = require('./lib/toggle-server.js');
-const testData = require('./lib/test-data.js');
-const clearDB = require('./lib/clearDB.js');
 const server = require('../server.js');
+const serverToggle = require('./lib/toggle-server.js');
 
 const url = `http://localhost:${process.env.PORT}`;
 
+mongoose.Promise = Promise;
+
+const testData = require('./lib/test-data.js');
 const exampleUser = testData.exampleUser;
 const exampleImage = testData.exampleImage;
 const examplePost = testData.examplePost;
 
-let imageData = {};
 
 describe('Image Routes', function() {
   before( done => {
@@ -29,48 +28,95 @@ describe('Image Routes', function() {
   after( done => {
     serverToggle.serverOff(server, done);
   });
-  beforeEach( done => {
-    new User(exampleUser)
-    .generatePasswordHash(exampleUser.password)
-    .then( user => user.save())
-    .then( user => {
-      this.tempUser = user;
-      return user.generateToken();
-    })
-    .then( token => {
-      this.tempToken = token;
-      examplePost.userID = this.tempUser._id.toString();
-      return new Post(examplePost).save();
-    })
-    .then( post => {
-      this.tempPost = post;
-      done();
-    })
+
+  after(done => {
+    Promise.all([
+      User.remove({}),
+      Post.remove({})
+    ])
+    .then( () => done())
     .catch(done);
   });
-  afterEach( done => {
-    delete examplePost.userID;
-    done();
-  });
-  afterEach(done => clearDB(done));
 
-  // describe('POST: /api/post/:postID/image', () => {
-  //   describe('with a VALID body', () => {
-  //     it('should post an image to postID', done => {
-  //       request.post(`${url}/api/post/${this.tempPost._id}/image`)
-  //       .set({
-  //         Authorization: `Bearer ${this.tempToken}`
-  //       })
-  //       .attach('image', exampleImage.image)
-  //       .end((err, res) => {
-  //         if (err) return done(err);
-  //         expect(res.status).to.equal(200);
-  //         expect(res.body.postID).to.equal(this.tempPost._id.toString());
-  //         imageData = res.body;
-  //         done();
-  //       });
-  //     });
-  //   });
-  // });
+  describe('POST: /api/post/:postID/image', () => {
+    describe('with a VALID body', () => {
+
+      before( done => {
+        new User(exampleUser)
+        .generatePasswordHash(exampleUser.password)
+        .then( user => user.save())
+        .then( user => {
+          this.tempUser = user;
+          return user.generateToken();
+        })
+        .then( token => {
+          this.tempToken = token;
+          examplePost.userID = this.tempUser._id;
+          return new Post(examplePost).save();
+        })
+        .then( post => {
+          this.tempPost = post;
+          exampleImage.userID = this.tempUser._id;
+          exampleImage.postID = this.tempPost._id;
+          done();
+        })
+        .catch(done);
+      });
+
+      after( done => {
+        delete examplePost.userID;
+        done();
+      });
+
+      it('should post an image to postID', done => {
+        request.post(`${url}/api/post/${this.tempPost._id}/image`)
+        .set({
+          Authorization: `Bearer ${this.tempToken}`
+        })
+        .field('name', exampleImage.name)
+        .attach('image', exampleImage.image)
+        .end((err, res) => {
+          if (err) return done(err);
+          this.tempImage = res.body;
+          expect(res.body.name).to.equal(exampleImage.name);
+          done();
+        });
+      });
+    });
+
+    describe('with an INVALID path', () => {
+      it('should return a 404 error', done => {
+        request.post(`${url}/api/post/${this.tempPost._id}/pic`)
+        .set({
+          Authorization: `Bearer ${this.tempToken}`
+        })
+        .attach('image', exampleImage.image)
+        .end((err, res) => {
+          expect(err).to.be.an('error');
+          expect(res.status).to.equal(404);
+          done();
+        });
+      });
+    });
+  });
+
+  describe('DELETE: /api/post/:postID/image/:imageID', () => {
+    describe('with a VALID imageID', () => {
+      it('should delete and return 204', done => {
+        request.delete(`${url}/api/post/${this.tempPost._id}/image/${this.tempImage._id}`)
+        .set({
+          Authorization: `Bearer ${this.tempToken}`
+        })
+        .field('name', exampleImage.name)
+        .attach('image', exampleImage.image)
+        .end((err, res) => {
+          if (err) return done(err);
+          expect(res.status).to.equal(204);
+          expect(res.body).to.be.empty;
+          done();
+        });
+      });
+    });
+  });
 
 });

@@ -50,7 +50,7 @@ imageRouter.post('/api/post/:postID/image', bearerAuth, upload.single('image'), 
     Body: fs.createReadStream(req.file.path)
   };
 
-  let tempPost = null;
+  let tempPost;
   let tempImage;
 
   Post.findById(req.params.postID)
@@ -59,10 +59,11 @@ imageRouter.post('/api/post/:postID/image', bearerAuth, upload.single('image'), 
     return s3uploadProm(params);
   })
   .then( s3data => {
-    del([`${dataDir}/*`]);
+    del([`${__dirname}/../data/*`]);
     let imageData = {
       imageURI: s3data.Location,
       objectKey: s3data.Key,
+      name: req.body.name,
       postID: req.params.postID,
       userID: req.user._id
     };
@@ -70,12 +71,32 @@ imageRouter.post('/api/post/:postID/image', bearerAuth, upload.single('image'), 
   })
   .then( image => {
     tempImage = image;
-    tempPost.images.push(image._id);
+    tempPost.images.unshift(image._id);
     return tempPost.save();
   })
   .then( () => res.json(tempImage))
   .catch( err => {
-    del([`${dataDir}/*`]);
+    del([`${__dirname}/../data/*`]);
     next(createError(404, err.message));
   });
+});
+
+imageRouter.delete('/api/post/:postId/image/:imageID', bearerAuth, function(req, res, next) {
+  debug('DELETE: /api/post/:postID/image/:imageID');
+
+  Image.findById(req.params.imageID)
+  .then( image => {
+    let params = {
+      Bucket: process.env.AWS_BUCKET,
+      Key: image.objectKey
+    };
+
+    s3.deleteObject(params, (err) => {
+      if (err) return next(err);
+      Image.findByIdAndRemove(req.params.imageID)
+      .then(() => res.status(204).send())
+      .catch(next);
+    });
+  })
+  .catch(err => next(createError(404, err.message)));
 });

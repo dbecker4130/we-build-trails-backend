@@ -26,7 +26,7 @@ describe('Server Test', function() {
 describe('Database Test', function() {
   it('should return a connection', done => {
     expect(mongoose.connection.port).to.be.a('number');
-    expect(mongoose.connection.name).to.equal('we-build-trails-devdb');
+    expect(mongoose.connection.name).to.equal('we-build-trails-devdbase');
     done();
   });
 });
