@@ -78,6 +78,7 @@ describe('Post Routes', function() {
         .end((err, res) => {
           expect(err).to.be.an('error');
           expect(res.status).to.equal(400);
+          expect(err.name).to.equal('Error');
           done();
         });
       });
@@ -93,10 +94,13 @@ describe('Post Routes', function() {
         .end((err, res) => {
           expect(err).to.be.an('error');
           expect(res.status).to.equal(401);
+          expect(err.name).to.equal('Error');
           done();
         });
       });
     });
+
+
   });
 
   describe('GET: /api/post', () => {
