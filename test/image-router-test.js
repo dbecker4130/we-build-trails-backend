@@ -100,4 +100,23 @@ describe('Image Routes', function() {
     });
   });
 
+  describe('DELETE: /api/post/:postID/image/:imageID', () => {
+    describe('with a VALID imageID', () => {
+      it('should delete and return 204', done => {
+        request.delete(`${url}/api/post/${this.tempPost._id}/image/${this.tempImage._id}`)
+        .set({
+          Authorization: `Bearer ${this.tempToken}`
+        })
+        .field('name', exampleImage.name)
+        .attach('image', exampleImage.image)
+        .end((err, res) => {
+          if (err) return done(err);
+          expect(res.status).to.equal(204);
+          expect(res.body).to.be.empty;
+          done();
+        });
+      });
+    });
+  });
+
 });

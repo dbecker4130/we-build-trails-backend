@@ -79,5 +79,24 @@ imageRouter.post('/api/post/:postID/image', bearerAuth, upload.single('image'), 
     del([`${__dirname}/../data/*`]);
     next(createError(404, err.message));
   });
+});
 
+imageRouter.delete('/api/post/:postId/image/:imageID', bearerAuth, function(req, res, next) {
+  debug('DELETE: /api/post/:postID/image/:imageID');
+
+  Image.findById(req.params.imageID)
+  .then( image => {
+    let params = {
+      Bucket: process.env.AWS_BUCKET,
+      Key: image.objectKey
+    };
+
+    s3.deleteObject(params, (err) => {
+      if (err) return next(err);
+      Image.findByIdAndRemove(req.params.imageID)
+      .then(() => res.status(204).send())
+      .catch(next);
+    });
+  })
+  .catch(err => next(createError(404, err.message)));
 });
