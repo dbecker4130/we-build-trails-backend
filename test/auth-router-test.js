@@ -29,6 +29,9 @@ describe('Auth Routes', function() {
   });
 
   afterEach(done => clearDB(done));
+  afterEach(() => {
+    delete exampleUser._id;
+  })
 
   describe('POST: /api/signup', function() {
     describe('with VALID body', function() {

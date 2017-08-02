@@ -18,5 +18,6 @@ exports.exampleComment = {
 };
 
 exports.exampleImage = {
-  image: `${__dirname}/../data/tester.png`
+  name: 'image name',
+  image: `${__dirname}/../data/tester.png`,
 };

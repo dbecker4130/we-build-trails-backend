@@ -22,13 +22,11 @@ mongoose.connect(process.env.MONGODB_URI);
 
 app.use(cors());
 app.use(morgan('dev'));
-
-app.use(express.static(`${__dirname}/build}`));
-app.use(errors);
 app.use(authRouter);
 app.use(postRouter);
 app.use(imageRouter);
 app.use(commentRouter);
+app.use(errors);
 
 const server = module.exports = app.listen(PORT, () => {
   debug(`server live: ${PORT}`);
