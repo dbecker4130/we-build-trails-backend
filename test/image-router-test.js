@@ -98,7 +98,37 @@ describe('Image Routes', function() {
       });
     });
 
-    
+    describe('with a INVALID model', () => {
+      it('should creare a 500 error', done => {
+        request.post(`${url}/api/post/${this.tempPost._id}/image`)
+        .set({
+          Authorization: `Bearer ${this.tempToken}`
+        })
+        .attach('pic', exampleImage.image)
+        .end((err, res) => {
+          expect(err).to.be.an('error');
+          expect(res.status).to.equal(500);
+          done();
+        });
+      });
+    });
+
+    // describe('with a INVALID image', () => {
+    //   it('should create a 400 error', done => {
+    //     request.post(`${url}/api/posted/${this.tempPost._id}/image`)
+    //     .set({
+    //       Authorization: `Bearer ${this.tempToken}`
+    //     })
+    //     .attach()
+    //     .end((err, res) => {
+    //       expect(err).to.be.an('error');
+    //       expect(res.status).to.equal(400);
+    //       done();
+    //     });
+    //   });
+    // });
+
+
   });
 
   describe('DELETE: /api/post/:postID/image/:imageID', () => {
