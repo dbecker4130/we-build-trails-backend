@@ -63,7 +63,6 @@ imageRouter.post('/api/post/:postID/image', bearerAuth, upload.single('image'), 
     let imageData = {
       imageURI: s3data.Location,
       objectKey: s3data.Key,
-      name: req.body.name,
       postID: req.params.postID,
       userID: req.user._id
     };

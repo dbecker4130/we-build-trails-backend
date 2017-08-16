@@ -72,12 +72,11 @@ describe('Image Routes', function() {
         .set({
           Authorization: `Bearer ${this.tempToken}`
         })
-        .field('name', exampleImage.name)
         .attach('image', exampleImage.image)
         .end((err, res) => {
           if (err) return done(err);
           this.tempImage = res.body;
-          expect(res.body.name).to.equal(exampleImage.name);
+          expect(res.status).to.equal(200);
           done();
         });
       });
