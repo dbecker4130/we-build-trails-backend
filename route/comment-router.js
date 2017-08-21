@@ -25,6 +25,11 @@ commentRouter.post('/api/post/:postID/comment', bearerAuth, jsonParser, function
   req.body.userID = req.user._id;
   new Comment(req.body).save()
   .then( comment => res.json(comment))
+
+  .then( post => {
+    post.commentIDs.unshift(this._id);
+    return;
+  })
   .catch(next);
 
   //NOTE Possible refactor pushing comments to post if doesn't work correctly on front end
