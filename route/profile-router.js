@@ -64,7 +64,7 @@ profileRouter.post('/api/profile/:userID/image', bearerAuth, upload.single('imag
     let imageData = {
       imageURI: s3data.Location,
       objectKey: s3data.Key,
-      userID: req.user._id
+      userID: req.user._id,
     };
     return new Image(imageData).save();
   })

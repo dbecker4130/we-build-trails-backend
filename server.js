@@ -11,6 +11,7 @@ const authRouter = require('./route/auth-router.js');
 const postRouter = require('./route/post-router.js');
 const imageRouter = require('./route/image-router.js');
 const commentRouter = require('./route/comment-router.js');
+const profileRouter = require('./route/profile-router.js');
 const errors = require('./lib/err-middleware.js');
 
 dotenv.load();
@@ -26,6 +27,7 @@ app.use(authRouter);
 app.use(postRouter);
 app.use(imageRouter);
 app.use(commentRouter);
+app.use(profileRouter);
 app.use(errors);
 
 const server = module.exports = app.listen(PORT, () => {
