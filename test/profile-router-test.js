@@ -8,6 +8,7 @@ const mongoose = require('mongoose');
 const User = require('../model/user.js');
 const server = require('../server.js');
 const serverToggle = require('./lib/toggle-server.js');
+const clearDB = require('./lib/clearDB.js');
 
 const url = `http://localhost:${process.env.PORT}`;
 
@@ -25,6 +26,7 @@ describe('Profile Routes', function() {
   after( done => {
     serverToggle.serverOff(server, done);
   });
+  afterEach(done => clearDB(done));
 
   after( done => {
     Promise.all([
@@ -62,6 +64,45 @@ describe('Profile Routes', function() {
           if (err) return done(err);
           this.tempImage = res.body;
           expect(res.status).to.equal(200);
+          done();
+        });
+      });
+    });
+  });
+
+  describe('PUT: /api/profile/:userID', () => {
+    describe('with a valid Body', () => {
+
+      before( done => {
+        new User(exampleUser)
+        .generatePasswordHash(exampleUser.password)
+        .then( user => user.save())
+        .then( user => {
+          this.tempUser = user;
+          return user.generateToken();
+        })
+        .then( token => {
+          this.tempToken = token;
+          done();
+        })
+        .catch(done);
+      });
+      afterEach(() => {
+        delete exampleUser.username;
+      });
+
+      it('should update the user', done => {
+        let updated = { username: 'new name' };
+
+        request.put(`${url}/api/profile/${this.tempUser._id}`)
+        .send(updated)
+        .set({
+          Authorization: `Bearer ${this.tempToken}`
+        })
+        .end((err, res) => {
+          if (err) return done(err);
+          expect(res.status).to.equal(200);
+          expect(res.body.username).to.equal('new name');
           done();
         });
       });

@@ -79,3 +79,14 @@ profileRouter.post('/api/profile/:userID/image', bearerAuth, upload.single('imag
     next(createError(404, err.message));
   });
 });
+
+profileRouter.put('/api/profile/:userID', bearerAuth, jsonParser, function(req, res, next) {
+  debug('PUT: /api/profile/:userID');
+
+  User.findByIdAndUpdate(req.params.userID, req.body, {new: true})
+  .then( user => {
+    if (user === null) return next(createError(404, 'user not found'));
+    res.json(user);
+  })
+  .catch(err => next(createError(404, err.message)));
+});
