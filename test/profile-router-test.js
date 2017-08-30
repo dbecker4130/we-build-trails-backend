@@ -53,7 +53,6 @@ describe('Profile Routes', function() {
         });
       });
 
-
       it('should return an image', done => {
         request.post(`${url}/api/profile/${this.tempUser._id}/image`)
         .set({
@@ -106,6 +105,41 @@ describe('Profile Routes', function() {
           done();
         });
       });
+    });
+  });
+
+  describe('GET: /api/profile/:userID', function() {
+    describe('with a VALID body', function() {
+
+      before( done => {
+        new User(exampleUser)
+        .generatePasswordHash(exampleUser.password)
+        .then( user => user.save())
+        .then( user => {
+          this.tempUser = user;
+          return user.generateToken();
+        })
+        .then( token => {
+          this.tempToken = token;
+          done();
+        })
+        .catch(done);
+      });
+      afterEach(() => {
+        delete exampleUser._id;
+      });
+
+      // it('should return user data', done => {
+      //   request.get(`${url}/api/profile/${this.tempUser._id}`)
+      //   .set({
+      //     Authorization: `Bearer ${this.tempToken}`
+      //   })
+      //   .end((err, res) => {
+      //     if (err) return done(err);
+      //     expect(res.status).to.equal(200);
+      //     done();
+      //   });
+      // });
     });
   });
 

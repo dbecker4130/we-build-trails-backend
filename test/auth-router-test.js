@@ -31,7 +31,7 @@ describe('Auth Routes', function() {
   afterEach(done => clearDB(done));
   afterEach(() => {
     delete exampleUser._id;
-  })
+  });
 
   describe('POST: /api/signup', function() {
     describe('with VALID body', function() {
@@ -70,6 +70,8 @@ describe('Auth Routes', function() {
         });
       });
     });
+
+
 
     describe('with an NOT FOUND route', () => {
       it('should return a 404 not found', done => {
@@ -116,6 +118,7 @@ describe('Auth Routes', function() {
         .end((err, res) => {
           expect(err).to.be.an('error');
           expect(res.status).to.equal(401);
+          expect(res.text).to.equal('UnauthorizedError');
           done();
         });
       });
@@ -128,6 +131,33 @@ describe('Auth Routes', function() {
         .end((err, res) => {
           expect(err).to.be.an('error');
           expect(res.status).to.equal(401);
+          expect(res.text).to.equal('UnauthorizedError');
+          done();
+        });
+      });
+    });
+
+    describe('with NO username', () => {
+      it('should return 400 username required', done => {
+        request.get(`${url}/api/signin`)
+        .auth('1234')
+        .end((err, res) => {
+          expect(err).to.be.an('error');
+          expect(res.status).to.equal(400);
+          expect(res.text).to.equal('BadRequestError');
+          done();
+        });
+      });
+    });
+
+    describe('with NO password', () => {
+      it('should return 400 password required', done => {
+        request.get(`${url}/api/signin`)
+        .auth('example name')
+        .end((err, res) => {
+          expect(err).to.be.an('error');
+          expect(res.status).to.equal(400);
+          expect(res.text).to.equal('BadRequestError');
           done();
         });
       });
@@ -139,6 +169,7 @@ describe('Auth Routes', function() {
         .end((err, res) => {
           expect(err).to.be.an('error');
           expect(res.status).to.equal(401);
+          expect(res.text).to.equal('UnauthorizedError');
           done();
         });
       });
