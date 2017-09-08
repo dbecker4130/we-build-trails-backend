@@ -6,8 +6,6 @@ const createError = require('http-errors');
 const debug = require('debug')('we-build-trails-backend:post-router');
 
 const Post = require('../model/post.js');
-const Image = require('../model/image.js');
-const Comment = require('../model/comment.js');
 const bearerAuth = require('../lib/bearer-auth-middleware.js');
 
 const postRouter = module.exports = Router();

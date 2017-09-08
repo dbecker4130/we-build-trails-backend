@@ -19,7 +19,7 @@ commentRouter.post('/api/post/:postID/comment', bearerAuth, jsonParser, function
     return;
   }
 
-  Post.findById(req.params.postID);
+  Post.findById(req.params.postID); // TODO double check, see if Post.find({}) works
 
   req.body.postID = req.params._id;
   req.body.userID = req.user._id;
