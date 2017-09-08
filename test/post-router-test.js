@@ -7,8 +7,6 @@ const request = require('superagent');
 
 const User = require('../model/user.js');
 const Post = require('../model/post.js');
-const Image = require('../model/image.js');
-const Comment = require('../model/comment.js');
 
 const testData = require('./lib/test-data.js');
 const serverToggle = require('./lib/toggle-server.js');
