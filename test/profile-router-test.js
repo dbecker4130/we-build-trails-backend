@@ -4,6 +4,7 @@ require('./lib/test-env.js');
 
 const expect = require('chai').expect;
 const request = require('superagent');
+// const mongoose = require('mongoose');
 const User = require('../model/user.js');
 
 const server = require('../server.js');
@@ -12,6 +13,8 @@ const clearDB = require('./lib/clearDB.js');
 const testData = require('./lib/test-data.js');
 
 const url = `http://localhost:${process.env.PORT}`;
+
+// mongoose.Promise = Promise;
 
 const exampleUser = testData.exampleUser;
 const exampleImage = testData.exampleImage;
