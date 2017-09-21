@@ -95,7 +95,6 @@ profileRouter.get('/api/profile/:userID', bearerAuth, function(req, res, next) {
   debug('GET: /api/profile/:userID');
 
   User.findById(req.params.userID)
-  .populate('profileImageURI')
   .then( user => {
     if (user === null) return next(createError(404, 'user not found'));
     if (user._id.toString() !== req.user._id.toString()) {
